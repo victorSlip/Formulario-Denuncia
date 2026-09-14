@@ -82,4 +82,4 @@ O script solicita autorização para:
 
 ## 📄 Licença
 
-Projeto de uso interno/institucional. Ajuste esta seção conforme a licença desejada.
+Projeto de uso pessoal.
