@@ -16,7 +16,7 @@ Sistema de canal de denúncias desenvolvido como um **Web App em Google Apps Scr
 | Componente | Função |
 |---|---|
 | Google Apps Script (Web App) | Backend (`Code.gs`) e páginas HTML servidas via `doGet()` |
-| Google Sheets | Base de dados — cada denúncia é uma linha |
+| Google Sheets | Base de dados, cada denúncia é uma linha |
 | Google Drive | Armazenamento dos arquivos anexados |
 | Gmail (`MailApp`) | Envio do e-mail de confirmação com o protocolo |
 
