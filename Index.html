@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<base target="_top">
+<style>
+  :root {
+    --primary: #1e3a5f;
+    --primary-light: #2c5282;
+    --accent: #3182ce;
+    --bg: #f4f6f8;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #2d3748;
+    --text-light: #718096;
+    --success: #276749;
+    --success-bg: #f0fff4;
+    --error: #c53030;
+    --error-bg: #fff5f5;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 24px 16px;
+    color: var(--text);
+  }
+
+  .container {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    padding: 28px 28px 22px;
+    color: white;
+  }
+
+  .card-header h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .card-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  form {
+    padding: 24px 28px 28px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .hint {
+    font-weight: 400;
+    color: var(--text-light);
+    font-size: 12.5px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-family: inherit;
+    background: #fafbfc;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(49,130,206,0.12);
+  }
+
+  textarea { resize: vertical; min-height: 90px; }
+
+  #anexoWrapper {
+    display: none;
+    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    background: #fafbfc;
+    margin-top: 6px;
+  }
+
+  #anexoWrapper input[type="file"] {
+    border: none;
+    padding: 4px 0;
+    background: transparent;
+  }
+
+  #listaArquivos {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  button:hover:not(:disabled) { background: var(--primary-light); }
+  button:active:not(:disabled) { transform: scale(0.99); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  #msg {
+    margin: 16px 28px 24px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+
+  #msg.show { display: block; }
+  #msg.enviando { background: #ebf8ff; color: #2b6cb0; }
+  #msg.sucesso { background: var(--success-bg); color: var(--success); font-weight: 600; }
+  #msg.erro { background: var(--error-bg); color: var(--error); }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1>📋 Formulário de Denúncia</h1>
+        <p>Suas informações são tratadas com sigilo. Preencha os campos abaixo.</p>
+      </div>
+
+      <form id="form">
+        <div class="field">
+          <label>Tipo da denúncia</label>
+          <select name="tipoDenuncia" required>
+            <option value="">Selecione uma opção</option>
+            <option value="abuso-de-autoridade">Abuso de autoridade</option>
+            <option value="assedio-moral">Assédio moral</option>
+            <option value="assedio-sexual">Assédio sexual</option>
+            <option value="discriminacao-preconceito">Discriminação ou preconceito</option>
+            <option value="corrupcao">Corrupção</option>
+            <option value="vantagem-indevida">Recebimento de vantagem indevida</option>
+            <option value="suborno">Suborno</option>
+            <option value="nepotismo">Nepotismo</option>
+            <option value="conflito-de-interesses">Conflito de interesses</option>
+            <option value="desvio-recursos-publicos">Desvio ou uso indevido de recursos públicos</option>
+            <option value="fraude">Fraude</option>
+            <option value="irregularidade-licitacao">Irregularidade em licitação ou contratação pública</option>
+            <option value="falsificacao-documentos">Falsificação ou alteração de documentos</option>
+            <option value="omissao-negligencia">Omissão ou negligência no exercício da função</option>
+            <option value="descumprimento-dever">Descumprimento de dever funcional</option>
+            <option value="uso-indevido-cargo">Uso indevido do cargo ou função</option>
+            <option value="conduta-incompativel">Conduta incompatível com a função pública</option>
+            <option value="violacao-sigilo">Violação de sigilo ou divulgação indevida de informações</option>
+            <option value="retaliacao-perseguicao">Retaliação ou perseguição</option>
+            <option value="favorecimento">Favorecimento ou tratamento privilegiado</option>
+            <option value="irregularidade-atendimento">Irregularidade no atendimento ao cidadão</option>
+            <option value="morosidade">Morosidade ou atraso injustificado</option>
+            <option value="ausencia-abandono">Ausência injustificada ou abandono do serviço</option>
+            <option value="violacao-normas">Violação de normas, regulamentos ou procedimentos</option>
+            <option value="uso-bens-publicos">Uso indevido de bens ou equipamentos públicos</option>
+            <option value="uso-informacoes-sistemas">Uso indevido de informações ou sistemas institucionais</option>
+            <option value="manipulacao-informacoes">Manipulação ou ocultação de informações</option>
+            <option value="ato-ilegal-irregular">Prática de ato ilegal ou irregular</option>
+            <option value="improbidade-ilicito">Improbidade ou possível ilícito administrativo</option>
+            <option value="outros">Outras irregularidades</option>
+            <option value="nao-sei-identificar">Não sei identificar / Outro</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Local da ocorrência</label>
+          <input type="text" name="localOcorrencia" placeholder="Ex: Setor de compras, sede administrativa..." required>
+        </div>
+
+        <div class="field">
+          <label>Data da ocorrência</label>
+          <input type="date" name="dataOcorrencia" required>
+        </div>
+
+        <div class="field">
+          <label>Descrição da denúncia</label>
+          <textarea name="descricao" rows="5" placeholder="Descreva com o máximo de detalhes possível: o que aconteceu, quando, quem esteve envolvido..." required></textarea>
+        </div>
+
+        <div class="field">
+          <label>Deseja anexar evidências?</label>
+          <select name="desejaAnexar" id="desejaAnexar" required>
+            <option value="Não">Não</option>
+            <option value="Sim">Sim</option>
+          </select>
+        </div>
+
+        <div class="field" id="anexoWrapper">
+          <label style="margin-bottom:8px;">Anexos <span class="hint">(você pode selecionar vários arquivos)</span></label>
+          <input type="file" id="arquivo" name="arquivo" multiple>
+          <div id="listaArquivos"></div>
+        </div>
+
+        <div class="field">
+          <label>E-mail <span class="hint">(opcional, para acompanhamento)</span></label>
+          <input type="email" name="email" placeholder="seuemail@exemplo.com">
+        </div>
+
+        <button type="submit" id="btnEnviar">Enviar denúncia</button>
+      </form>
+
+      <div id="msg"></div>
+    </div>
+    <p class="footer-note">Este canal é confidencial. Denúncias falsas estão sujeitas às penalidades da lei.</p>
+    <a href="https://script.google.com/macros/s/AKfycbyYPFGY1MsG9QckU3SlL0PSqH7lIKBEhJytW4VB2biigxepgIMIBaPzhQmOpMvFSIpEKg/exec?page=consulta" class="footer-note" style="display:block; margin-top:8px; color:var(--accent); text-decoration:none; font-weight:600;"> 
+      🔍 Já enviou uma denúncia? Consulte o andamento aqui
+    </a>
+  </div>
+
+  <script>
+    const desejaAnexar = document.getElementById('desejaAnexar');
+    const anexoWrapper = document.getElementById('anexoWrapper');
+    const arquivoInput = document.getElementById('arquivo');
+    const listaArquivos = document.getElementById('listaArquivos');
+    const msg = document.getElementById('msg');
+
+    desejaAnexar.addEventListener('change', () => {
+      anexoWrapper.style.display = desejaAnexar.value === 'Sim' ? 'block' : 'none';
+    });
+
+    arquivoInput.addEventListener('change', () => {
+      const nomes = Array.from(arquivoInput.files).map(f => f.name);
+      listaArquivos.textContent = nomes.length ? "📎 " + nomes.join(", ") : "";
+    });
+
+    function setMsg(texto, tipo) {
+      msg.textContent = texto;
+      msg.className = "show " + tipo;
+    }
+
+    document.getElementById('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('btnEnviar');
+
+      const dados = {
+        tipoDenuncia: form.tipoDenuncia.value,
+        localOcorrencia: form.localOcorrencia.value,
+        dataOcorrencia: form.dataOcorrencia.value,
+        descricao: form.descricao.value,
+        desejaAnexar: form.desejaAnexar.value,
+        email: form.email.value,
+        arquivos: []
+      };
+
+      btn.disabled = true;
+      setMsg("Enviando denúncia, aguarde...", "enviando");
+
+      function enviarFinal() {
+        google.script.run
+          .withSuccessHandler(res => {
+            btn.disabled = false;
+            if (res.sucesso) {
+              setMsg("✅ Denúncia enviada com sucesso! Protocolo: " + res.protocolo, "sucesso");
+              form.reset();
+              anexoWrapper.style.display = 'none';
+              listaArquivos.textContent = "";
+            } else {
+              setMsg("❌ Erro: " + res.erro, "erro");
+            }
+          })
+          .withFailureHandler(err => {
+            btn.disabled = false;
+            setMsg("❌ Erro: " + err.message, "erro");
+          })
+          .salvarDenuncia(dados);
+      }
+
+      const arquivos = dados.desejaAnexar === "Sim" ? Array.from(arquivoInput.files) : [];
+
+      if (arquivos.length === 0) {
+        enviarFinal();
+        return;
+      }
+
+      let processados = 0;
+      arquivos.forEach(arquivo => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          dados.arquivos.push({
+            base64: evt.target.result,
+            nome: arquivo.name,
+            tipo: arquivo.type
+          });
+          processados++;
+          if (processados === arquivos.length) enviarFinal();
+        };
+        reader.readAsDataURL(arquivo);
+      });
+    });
+  </script>
+</body>
+</html>

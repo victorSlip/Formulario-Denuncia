@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<base target="_top">
+<style>
+  :root {
+    --primary: #1e3a5f;
+    --primary-light: #2c5282;
+    --accent: #3182ce;
+    --bg: #f4f6f8;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text: #2d3748;
+    --text-light: #718096;
+    --success: #276749;
+    --success-bg: #f0fff4;
+    --pending: #b7791f;
+    --pending-bg: #fffaf0;
+    --error: #c53030;
+    --error-bg: #fff5f5;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 24px 16px;
+    color: var(--text);
+  }
+  .container { max-width: 480px; margin: 0 auto; }
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    padding: 28px 28px 22px;
+    color: white;
+  }
+  .card-header h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; }
+  .card-header p { margin: 0; font-size: 14px; opacity: 0.85; }
+  .body-content { padding: 24px 28px 28px; }
+  label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 6px; }
+  input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fafbfc;
+    text-transform: uppercase;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(49,130,206,0.12);
+  }
+  button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover:not(:disabled) { background: var(--primary-light); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  #resultado { margin-top: 20px; display: none; }
+  #resultado.show { display: block; }
+
+  .resultado-card {
+    border-radius: 8px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+  }
+  .resultado-linha {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .resultado-linha:last-child { border-bottom: none; }
+  .resultado-label { color: var(--text-light); }
+  .resultado-valor { font-weight: 600; text-align: right; }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .badge.pendente { background: var(--pending-bg); color: var(--pending); }
+  .badge.andamento { background: #ebf8ff; color: #2b6cb0; }
+  .badge.concluida { background: var(--success-bg); color: var(--success); }
+  .badge.arquivada { background: #edf2f7; color: var(--text-light); }
+
+  #msgErro {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: var(--error-bg);
+    color: var(--error);
+    font-size: 14px;
+    display: none;
+  }
+  #msgErro.show { display: block; }
+
+  .voltar {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: var(--text-light);
+    text-decoration: none;
+  }
+  .voltar:hover { color: var(--accent); }
+  
+  .observacao-box {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: #f7fafc;
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+  }
+  .observacao-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .observacao-texto {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1>🔍 Consultar Denúncia</h1>
+        <p>Digite o protocolo recebido no cadastro da denúncia.</p>
+      </div>
+      <div class="body-content">
+        <form id="formConsulta">
+          <label>Número do protocolo</label>
+          <input type="text" id="protocolo" placeholder="Ex: DEN-20260913-0001" required>
+          <button type="submit" id="btnConsultar">Consultar</button>
+        </form>
+
+        <div id="msgErro"></div>
+
+        <div id="resultado">
+          <div class="resultado-card">
+            <div class="resultado-linha">
+              <span class="resultado-label">Protocolo</span>
+              <span class="resultado-valor" id="rProtocolo"></span>
+            </div>
+            <div class="resultado-linha">
+              <span class="resultado-label">Tipo</span>
+              <span class="resultado-valor" id="rTipo"></span>
+            </div>
+            <div class="resultado-linha">
+              <span class="resultado-label">Registrada em</span>
+              <span class="resultado-valor" id="rData"></span>
+            </div>
+                        <div class="resultado-linha">
+              <span class="resultado-label">Status</span>
+              <span class="resultado-valor"><span class="badge" id="rStatus"></span></span>
+            </div>
+          </div>
+
+          <div class="observacao-box" id="observacaoBox" style="display:none;">
+            <span class="observacao-label">📝 Andamento / Encaminhamento</span>
+            <p class="observacao-texto" id="rObservacoes"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="https://script.google.com/macros/s/AKfycbyYPFGY1MsG9QckU3SlL0PSqH7lIKBEhJytW4VB2biigxepgIMIBaPzhQmOpMvFSIpEKg/exec" class="voltar">← Voltar ao formulário de denúncia</a>
+  </div> 
+
+  <script>
+    const form = document.getElementById('formConsulta');
+    const btn = document.getElementById('btnConsultar');
+    const resultado = document.getElementById('resultado');
+    const msgErro = document.getElementById('msgErro');
+
+    function classeBadge(status) {
+      const s = (status || "").toLowerCase();
+      if (s.includes('conclu')) return 'concluida';
+      if (s.includes('andamento') || s.includes('análise')) return 'andamento';
+      if (s.includes('arquiv')) return 'arquivada';
+      return 'pendente';
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const protocolo = document.getElementById('protocolo').value;
+
+      btn.disabled = true;
+      btn.textContent = "Consultando...";
+      resultado.classList.remove('show');
+      msgErro.classList.remove('show');
+
+      google.script.run
+        .withSuccessHandler(res => {
+          btn.disabled = false;
+          btn.textContent = "Consultar";
+
+          if (res.encontrado) {
+            document.getElementById('rProtocolo').textContent = res.protocolo;
+            document.getElementById('rTipo').textContent = res.tipo;
+            document.getElementById('rData').textContent = res.dataCadastro;
+            const badge = document.getElementById('rStatus');
+            badge.textContent = res.status;
+            badge.className = "badge " + classeBadge(res.status);
+
+            const obsBox = document.getElementById('observacaoBox');
+            if (res.observacoes && res.observacoes.trim() !== "") {
+              document.getElementById('rObservacoes').textContent = res.observacoes;
+              obsBox.style.display = 'block';
+            } else {
+              obsBox.style.display = 'none';
+            }
+
+            resultado.classList.add('show');
+          } else {
+            msgErro.textContent = res.erro;
+            msgErro.classList.add('show');
+          }
+        })
+        .withFailureHandler(err => {
+          btn.disabled = false;
+          btn.textContent = "Consultar";
+          msgErro.textContent = "Erro: " + err.message;
+          msgErro.classList.add('show');
+        })
+        .consultarProtocolo(protocolo);
+    });
+  </script>
+</body>
+</html>
