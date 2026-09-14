@@ -47,7 +47,7 @@ O mesmo Web App serve duas páginas, controladas por parâmetro de URL:
 3. No `Code.gs`, ajuste as constantes:
 
    ```javascript
-   const SHEET_NAME = "Denúncias";
+   const SHEET_NAME = "Denuncias";
    const PASTA_ANEXOS_ID = "SEU_ID_AQUI";
    ```
 
